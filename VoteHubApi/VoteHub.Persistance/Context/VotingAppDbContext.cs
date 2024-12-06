@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using VoteHub.Domain.Entities;
 using VotingAppApi.Models;
 namespace VotingAppApi.Data
 {
     public class VotingAppDbContext : DbContext 
     {
-        public DbSet<AppUser> Users { get; set; }
+        public DbSet<VotingEvent> VotingEvents { get; set; }
         public DbSet<Candidate> Candidates { get; set; }
         public DbSet<Vote> Votes { get; set; }
 
@@ -13,6 +14,24 @@ namespace VotingAppApi.Data
         {
 
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configure VotingEvent -> Candidates
+            modelBuilder.Entity<VotingEvent>()
+                .HasMany(e => e.Candidates)
+                .WithOne()
+                .HasForeignKey(c => c.VotingEventId)
+                .OnDelete(DeleteBehavior.Cascade); 
+
+            // Configure VotingEvent -> Votes
+            modelBuilder.Entity<VotingEvent>()
+                .HasMany(e => e.Votes)
+                .WithOne()
+                .HasForeignKey(v => v.VotingEventId)
+                .OnDelete(DeleteBehavior.Cascade); 
+        }
+
     }
-      
+
 }
