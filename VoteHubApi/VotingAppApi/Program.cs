@@ -1,5 +1,7 @@
 
-namespace VotingAppApi
+using VoteHub.Persistance.Extensions;
+
+namespace VoteHub.Api
 {
     public class Program
     {
@@ -13,6 +15,8 @@ namespace VotingAppApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDependencies(builder.Configuration);
 
             var app = builder.Build();
 

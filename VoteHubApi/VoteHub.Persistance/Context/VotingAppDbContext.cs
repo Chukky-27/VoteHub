@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VotingAppApi.Models;
-
 namespace VotingAppApi.Data
 {
     public class VotingAppDbContext : DbContext 
@@ -11,6 +9,5 @@ namespace VotingAppApi.Data
 
         }
     }
-
-    
+      
 }
