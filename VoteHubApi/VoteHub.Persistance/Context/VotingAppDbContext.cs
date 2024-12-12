@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using VoteHub.Domain.Entities;
 using VotingAppApi.Models;
 namespace VotingAppApi.Data
 {
-    public class VotingAppDbContext : DbContext 
+    public class VotingAppDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<VotingEvent> VotingEvents { get; set; }
         public DbSet<Candidate> Candidates { get; set; }

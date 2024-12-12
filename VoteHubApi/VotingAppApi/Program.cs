@@ -29,6 +29,8 @@ namespace VoteHub.Api
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
 
