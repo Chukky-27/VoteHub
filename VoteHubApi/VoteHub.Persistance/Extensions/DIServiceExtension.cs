@@ -4,10 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using VoteHub.Persistance.IRepositories;
-using VoteHub.Persistance.IServices;
-using VoteHub.Persistance.Repositories;
-using VoteHub.Persistance.Services;
+using VoteHub.Persistance.Repositories.Implementation;
+using VoteHub.Persistance.Repositories.Interfaces;
+using VoteHub.Persistance.Services.Implementation;
+using VoteHub.Persistance.Services.Interfaces;
 using VotingAppApi.Data;
 using VotingAppApi.Models;
 
@@ -62,7 +62,7 @@ namespace VoteHub.Persistance.Extensions
                 options.InstanceName = "VotingApp_";
             });
 
-
+            services.AddScoped<IRoleSeeder, RoleSeeder>();
 
             //services.AddDistributedRedisCache(options =>
             //{

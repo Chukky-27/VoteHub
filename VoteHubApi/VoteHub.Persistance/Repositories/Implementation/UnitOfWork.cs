@@ -1,19 +1,19 @@
-﻿using VoteHub.Persistance.IRepositories;
+﻿using VoteHub.Persistance.Repositories.Interfaces;
 using VotingAppApi.Data;
 using VotingAppApi.Models;
 
-namespace VoteHub.Persistance.Repositories
+namespace VoteHub.Persistance.Repositories.Implementation
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly VotingAppDbContext _context;
         private IVotingEventRepository _votingEvents;
         private IRepository<Candidate> _candidates;
-        private IRepository<Vote> _votes;           
+        private IRepository<Vote> _votes;
 
         public UnitOfWork(VotingAppDbContext context)
         {
-            _context = context;            
+            _context = context;
         }
 
         public IVotingEventRepository VotingEvents =>

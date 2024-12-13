@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VoteHub.Domain.Entities;
-using VoteHub.Persistance.IRepositories;
+using VoteHub.Persistance.Repositories.Interfaces;
 using VotingAppApi.Data;
 
-namespace VoteHub.Persistance.Repositories
+namespace VoteHub.Persistance.Repositories.Implementation
 {
     public class VotingEventRepository : Repository<VotingEvent>, IVotingEventRepository
     {
         private readonly VotingAppDbContext _context;
 
-        public VotingEventRepository(VotingAppDbContext context) : base(context) 
+        public VotingEventRepository(VotingAppDbContext context) : base(context)
         {
             _context = context;
         }

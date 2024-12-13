@@ -1,6 +1,6 @@
 ﻿using VotingAppApi.Models;
 
-namespace VoteHub.Persistance.IRepositories
+namespace VoteHub.Persistance.Repositories.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {

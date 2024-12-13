@@ -1,6 +1,6 @@
 ﻿using VoteHub.Domain.Entities;
 
-namespace VoteHub.Persistance.IRepositories
+namespace VoteHub.Persistance.Repositories.Interfaces
 {
     public interface IVotingEventRepository : IRepository<VotingEvent>
     {

@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Caching.Memory;
 using System.Text.Json;
 using VoteHub.Domain.Entities;
-using VoteHub.Persistance.IRepositories;
+using VoteHub.Persistance.Repositories.Interfaces;
 using VotingAppApi.Models;
 
-namespace VoteHub.Persistance.Services
+namespace VoteHub.Persistance.Services.Implementation
 {
     public class VotingEventService
     {

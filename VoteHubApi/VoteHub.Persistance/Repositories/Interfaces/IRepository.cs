@@ -1,4 +1,4 @@
-﻿namespace VoteHub.Persistance.IRepositories
+﻿namespace VoteHub.Persistance.Repositories.Interfaces
 {
     public interface IRepository<T> where T : class
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VoteHub.Persistance.IRepositories;
+using VoteHub.Persistance.Repositories.Interfaces;
 using VotingAppApi.Data;
 
-namespace VoteHub.Persistance.Repositories
+namespace VoteHub.Persistance.Repositories.Implementation
 {
     public class Repository<T> : IRepository<T> where T : class
     {

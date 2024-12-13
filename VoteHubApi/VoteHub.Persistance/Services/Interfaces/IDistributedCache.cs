@@ -1,6 +1,6 @@
 ﻿using VoteHub.Domain.Entities;
 
-namespace VoteHub.Persistance.IServices
+namespace VoteHub.Persistance.Services.Interfaces
 {
     public interface IDistributedCacheService
     {

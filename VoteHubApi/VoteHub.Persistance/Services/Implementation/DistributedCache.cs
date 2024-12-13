@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 using VoteHub.Domain.Entities;
-using VoteHub.Persistance.IRepositories;
-using VoteHub.Persistance.IServices;
+using VoteHub.Persistance.Repositories.Interfaces;
+using VoteHub.Persistance.Services.Interfaces;
 
-namespace VoteHub.Persistance.Services
+namespace VoteHub.Persistance.Services.Implementation
 {
     public class DistributedCacheService : IDistributedCacheService
     {

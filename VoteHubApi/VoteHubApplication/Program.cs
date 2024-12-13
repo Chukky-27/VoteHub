@@ -1,8 +1,5 @@
 
-using VoteHub.Persistance.Extensions;
-using VoteHub.Persistance.Services.Interfaces;
-
-namespace VoteHub.Api
+namespace VoteHubApplication
 {
     public class Program
     {
@@ -17,15 +14,7 @@ namespace VoteHub.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDependencies(builder.Configuration);
-
             var app = builder.Build();
-
-            using (var scope = app.Services.CreateScope())
-            {
-                var roleSeeder = scope.ServiceProvider.GetRequiredService<IRoleSeeder>();
-                roleSeeder.SeedRolesAsync();
-            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -35,8 +24,6 @@ namespace VoteHub.Api
             }
 
             app.UseHttpsRedirection();
-
-            app.UseAuthentication();
 
             app.UseAuthorization();
 

@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoteHub.Api", "VotingAppApi
 		{F0CA54D2-9DB4-4F51-A83B-3835E6F39DCA} = {F0CA54D2-9DB4-4F51-A83B-3835E6F39DCA}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoteHub.Persistance", "VoteHub.Persistance\VoteHub.Persistance.csproj", "{F0CA54D2-9DB4-4F51-A83B-3835E6F39DCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoteHub.Persistance", "VoteHub.Persistance\VoteHub.Persistance.csproj", "{F0CA54D2-9DB4-4F51-A83B-3835E6F39DCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VoteHub.Domain", "VoteHub.Domain\VoteHub.Domain.csproj", "{28CA1BD2-2327-4058-A298-B22336CECDD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VoteHub.Domain", "VoteHub.Domain\VoteHub.Domain.csproj", "{28CA1BD2-2327-4058-A298-B22336CECDD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
