@@ -8,6 +8,7 @@ namespace VotingAppApi.Models
         public string? Name { get; set; }
         public CandidatePosition Position { get; set; }
         public int VotingEventId { get; set; } // Foreign key
-        public int VoteCount { get; set; }
+        public double VoteCount { get; set; }
+        public string? CandidateProfile { get; set; }
     }
 }

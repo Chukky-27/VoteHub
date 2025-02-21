@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using VoteHub.Domain.Entities;
 using VoteHub.Persistance.Repositories.Interfaces;
+using VoteHub.Persistance.Services.Interfaces;
 
 namespace VoteHub.Persistance.Services.Implementation
 {
-    public class EventService(IEventRepository eventRepository, ILogger<EventService> logger)
+    public class EventService(IVotingEventRepository eventRepository, ILogger<EventService> logger) : IEventService
     {
-        private readonly IEventRepository _eventRepository = eventRepository;
+        private readonly IVotingEventRepository _eventRepository = eventRepository;
         private readonly ILogger<EventService> _logger = logger;
 
         public async Task<VotingEvent?> GetEventByNameAsync(string eventName)

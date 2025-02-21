@@ -52,7 +52,7 @@ namespace VoteHub.Persistance.Extensions
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-            services.AddScoped<IDistributedCacheService, DistributedCacheService>();
+            services.AddScoped<IDistributedCacheService, DistributedCacheService>();           
 
             services.AddMemoryCache();
 
@@ -63,6 +63,11 @@ namespace VoteHub.Persistance.Extensions
             });
 
             services.AddScoped<IRoleSeeder, RoleSeeder>();
+
+            services.AddScoped<IEventService, EventService>();
+
+            services.AddScoped<IVotingEventService, VotingEventService>();
+
 
             //services.AddDistributedRedisCache(options =>
             //{

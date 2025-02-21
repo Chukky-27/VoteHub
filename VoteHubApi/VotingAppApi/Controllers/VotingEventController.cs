@@ -8,64 +8,90 @@ namespace VoteHub.Api.Controllers
 {
     [Route("api/voting-events")]
     [ApiController]
-    public class VotingEventController(
-        IDistributedCacheService cacheService,
-        IEventService eventService,
-        ILogger<VotingEventController> logger) : ControllerBase
+    public class VotingEventController : ControllerBase
     {
-        private readonly IDistributedCacheService _cacheService = cacheService;
-        private readonly IEventService _eventService = eventService;
-        private readonly ILogger<VotingEventController> _logger = logger;
+        private readonly IVotingEventService _eventService;
+        private readonly ILogger<VotingEventController> _logger;
+
+        public VotingEventController(IVotingEventService eventService, ILogger<VotingEventController> logger)
+        {
+            _eventService = eventService;
+            _logger = logger;
+        }
 
         // GET: api/voting-events/cached
         [HttpGet("cached")]
         public async Task<IActionResult> GetCachedVotingEvents()
         {
-            var events = await _cacheService.GetCachedVotingEventsAsync();
-            return Ok(events);
+            try
+            {
+                var events = await _eventService.GetUpcomingEventsAsync();
+                _logger.LogInformation("Retrieved cached upcoming events successfully.");
+                return Ok(events);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while fetching cached events.");
+                return StatusCode(500, "An error occurred while retrieving cached events.");
+            }
         }
 
         // DELETE: api/voting-events/cache
         [HttpDelete("cache")]
         public async Task<IActionResult> ClearCache()
         {
-            await _cacheService.ClearVotingEventsCacheAsync();
-            return NoContent();
+            try
+            {
+                await _eventService.ClearVotingEventsCacheAsync();
+                _logger.LogInformation("Voting events cache cleared successfully.");
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while clearing the cache.");
+                return StatusCode(500, "An error occurred while clearing the cache.");
+            }
         }
 
-        // POST: api/voting-events/create-event
+        // POST: api/voting-events/create
         [Authorize(Roles = "Admin")]
-        [HttpPost("create-event")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateEvent([FromBody] VotingEvent votingEvent)
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("CreateEvent request received with invalid data.");
+                _logger.LogWarning("CreateEvent request received with invalid model state.");
                 return BadRequest(ModelState);
             }
 
             if (votingEvent.StartDate >= votingEvent.EndDate)
             {
-                _logger.LogWarning("Invalid date range: StartDate ({StartDate}) >= EndDate ({EndDate}).", votingEvent.StartDate, votingEvent.EndDate);
+                _logger.LogWarning("Invalid date range: StartDate ({StartDate}) >= EndDate ({EndDate}).", 
+                                    votingEvent.StartDate, votingEvent.EndDate);
                 return BadRequest("End date must be later than the start date.");
             }
 
             try
             {
+                // Check for existing event with the same name
                 var existingEvent = await _eventService.GetEventByNameAsync(votingEvent.Name);
                 if (existingEvent != null)
                 {
                     _logger.LogInformation("An event with the name '{EventName}' already exists.", votingEvent.Name);
-                    return Conflict("An event with the same name already exists.");
+                    return Conflict($"An event with the name '{votingEvent.Name}' already exists.");
                 }
 
-                var overlappingEvent = await _eventService.GetOverlappingEventAsync(votingEvent.StartDate.Value, votingEvent.EndDate.Value);
+                // Check for overlapping event
+                var overlappingEvent = await _eventService.GetOverlappingEventAsync(
+                    votingEvent.StartDate.Value, votingEvent.EndDate.Value);
                 if (overlappingEvent != null)
                 {
-                    _logger.LogInformation("The event dates overlap with an existing event.");
+                    _logger.LogInformation("The event dates overlap with an existing event: '{EventName}' (ID: {EventId}).", 
+                                           overlappingEvent.Name, overlappingEvent.Id);
                     return Conflict("The event dates overlap with an existing event.");
                 }
 
+                // Create the new event
                 var newEvent = new VotingEvent
                 {
                     Name = votingEvent.Name,
@@ -75,14 +101,39 @@ namespace VoteHub.Api.Controllers
                 };
 
                 await _eventService.CreateEventAsync(newEvent);
-                _logger.LogInformation("Event '{EventName}' successfully created with ID: {EventId}.", newEvent.Name, newEvent.Id);
+                _logger.LogInformation("Event '{EventName}' created successfully with ID: {EventId}.", 
+                                       newEvent.Name, newEvent.Id);
 
-                return CreatedAtAction(nameof(CreateEvent), new { id = newEvent.Id }, newEvent);
+                // Return the created event
+                return CreatedAtAction(nameof(GetEventById), new { id = newEvent.Id }, newEvent);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unexpected error occurred while creating event.");
+                _logger.LogError(ex, "Unexpected error occurred while creating a voting event.");
                 return StatusCode(500, "Internal server error occurred. Please try again later.");
+            }
+        }
+
+        // GET: api/voting-events/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetEventById(int id)
+        {
+            try
+            {
+                var votingEvent = await _eventService.GetVotingEventByIdAsync(id);
+                if (votingEvent == null)
+                {
+                    _logger.LogWarning("Voting event with ID {EventId} not found.", id);
+                    return NotFound($"Voting event with ID {id} not found.");
+                }
+
+                _logger.LogInformation("Voting event with ID {EventId} retrieved successfully.", id);
+                return Ok(votingEvent);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while retrieving the voting event with ID {EventId}.", id);
+                return StatusCode(500, "An error occurred while retrieving the event.");
             }
         }
     }
