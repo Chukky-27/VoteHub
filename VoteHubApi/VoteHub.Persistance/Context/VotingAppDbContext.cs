@@ -6,33 +6,49 @@ namespace VotingAppApi.Data
 {
     public class VotingAppDbContext : IdentityDbContext<AppUser>
     {
+        // DbSet properties for all entities
         public DbSet<VotingEvent> VotingEvents { get; set; }
         public DbSet<Candidate> Candidates { get; set; }
         public DbSet<Vote> Votes { get; set; }
 
-        public VotingAppDbContext(DbContextOptions<VotingAppDbContext> options) 
+        // Constructor
+        public VotingAppDbContext(DbContextOptions<VotingAppDbContext> options)
             : base(options)
         {
-
         }
 
+        // OnModelCreating method to configure relationships and constraints
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure VotingEvent -> Candidates
+            base.OnModelCreating(modelBuilder);
+
+            // Ensure a user can vote only once per voting event
+            modelBuilder.Entity<Vote>()
+                .HasIndex(v => new { v.UserId, v.VotingEventId })
+                .IsUnique();
+
+            // Configure VotingEvent -> Candidates relationship
             modelBuilder.Entity<VotingEvent>()
                 .HasMany(e => e.Candidates)
-                .WithOne()
+                .WithOne(c => c.VotingEvent) // Navigation property in Candidate
                 .HasForeignKey(c => c.VotingEventId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure VotingEvent -> Votes
+            // Configure VotingEvent -> Votes relationship
             modelBuilder.Entity<VotingEvent>()
                 .HasMany(e => e.Votes)
-                .WithOne()
+                .WithOne(v => v.VotingEvent) // Navigation property in Vote
                 .HasForeignKey(v => v.VotingEventId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure Candidate -> Votes relationship
+            modelBuilder.Entity<Candidate>()
+                .HasMany(c => c.Votes)
+                .WithOne(v => v.Candidate) // Navigation property in Vote
+                .HasForeignKey(v => v.CandidateId)
+                .OnDelete(DeleteBehavior.Restrict); // Prevent accidental deletion of candidates with votes
         }
 
-    }
 
+    }
 }

@@ -62,12 +62,20 @@ namespace VoteHub.Persistance.Extensions
                 options.InstanceName = "VotingApp_";
             });
 
-            services.AddScoped<IRoleSeeder, RoleSeeder>();
+            //services.AddScoped<IRoleSeeder, RoleSeeder>();
 
             services.AddScoped<IEventService, EventService>();
 
             services.AddScoped<IVotingEventService, VotingEventService>();
 
+            services.AddScoped<DataSeeder>(provider =>
+            {
+                var dbContext = provider.GetRequiredService<VotingAppDbContext>();
+                var userManager = provider.GetRequiredService<UserManager<AppUser>>();
+                var roleManager = provider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                return new DataSeeder(dbContext, userManager, roleManager);
+            });
 
             //services.AddDistributedRedisCache(options =>
             //{

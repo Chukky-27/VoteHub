@@ -1,4 +1,5 @@
 
+using VoteHub.Persistance;
 using VoteHub.Persistance.Extensions;
 using VoteHub.Persistance.Services.Interfaces;
 
@@ -6,7 +7,7 @@ namespace VoteHub.Api
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +22,11 @@ namespace VoteHub.Api
 
             var app = builder.Build();
 
+            // Seed data
             using (var scope = app.Services.CreateScope())
             {
-                var roleSeeder = scope.ServiceProvider.GetRequiredService<IRoleSeeder>();
-                roleSeeder.SeedRolesAsync();
+                var dataSeeder = scope.ServiceProvider.GetRequiredService<DataSeeder>();
+                await dataSeeder.SeedAsync();
             }
 
             // Configure the HTTP request pipeline.
